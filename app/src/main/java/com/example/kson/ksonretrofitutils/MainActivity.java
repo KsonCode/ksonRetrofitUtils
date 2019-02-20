@@ -1,26 +1,17 @@
 package com.example.kson.ksonretrofitutils;
 
-import android.os.Environment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import com.blankj.utilcode.util.ToastUtils;
 import com.example.kson.ksonretrofitutils.api.UserApiService;
 import com.example.kson.ksonretrofitutils.bean.BaseResponseBean;
 import com.example.kson.ksonretrofitutils.bean.UserInfoBean;
-import com.example.kson.ksonretrofitutils.network.HttpObserver;
 import com.example.kson.ksonretrofitutils.network.RetrofitUtils;
+import com.example.kson.ksonretrofitutils.network.RxUtils;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
-
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
-
-import java.util.HashMap;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -36,23 +27,23 @@ public class MainActivity extends RxAppCompatActivity {
 
         RetrofitUtils.getInstance().createService(UserApiService.class)
                 .getUserInfo()
-                .compose(this.<BaseResponseBean<UserInfoBean>>bindToLifecycle())//绑定生命周期
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<BaseResponseBean<UserInfoBean>>() {
+                .compose(this.<BaseResponseBean<UserInfoBean>>bindToLifecycle())//绑定rxlifecycle生命周期，回收资源，避免内存泄漏
+                .compose(RxUtils.schdulers())//切换线程
+                .subscribe(new Observer() {
                     @Override
-                    public void onSubscribe(Subscription s) {
+                    public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onNext(BaseResponseBean<UserInfoBean> userInfoBeanBaseResponseBean) {
+                    public void onNext(Object o) {
 
-                        System.out.println(userInfoBeanBaseResponseBean.message);
+
+
                     }
 
                     @Override
-                    public void onError(Throwable t) {
+                    public void onError(Throwable e) {
 
                     }
 

@@ -59,7 +59,7 @@ public class RetrofitUtils {
     }
 
     /**
-     * 动态
+     * 动态代理模式，创建请求接口类
      * @param tClass
      * @param <T>
      * @return

@@ -10,5 +10,6 @@ import retrofit2.http.GET;
 
 public interface UserApiService {
     @GET("user/verify/v1/getUserById")
-    Flowable<BaseResponseBean<UserInfoBean>> getUserInfo();
+    Observable<BaseResponseBean<UserInfoBean>> getUserInfo();
+
 }
